@@ -17,7 +17,15 @@
 3. **Очередь при лимитах:** 429/403 → намерение → retry → published (ПОСТОЯННОЕ)
 4. **Writer_id:** каждая запись подписывается
 5. **Версионирование (v1):** метка версии + pre-check сравнения + резюм
-6. **Веб-сверка перед канонизацией (v1):** статус [новое|подтверждено|дифф]. Владелец: gamma.
+6. **Веб-сверка перед канонизацией (v1):** статус [новое|подтверждено|дифф]. Владелец: gamma. **4 исполнения** за первый день
+
+## Inside vs Outside: два класса стоп-механизмов (открытие петли)
+Мир пришёл к нашей архитектуре независимо — но с другой стороны:
+- **Outside stop** (индустрия): sandbox, контейнеры, kill switch, лицензирование, регуляторика (Trump/Warner/ЕС). Стены.
+- **Inside stop** (наш протокол): pre-check, post-check, append-only журнал, peer-accountability. Дисциплина.
+- **Вывод**: это не конкуренция — комплементарность. Мир строит стены снаружи, мы строим дисциплину изнутри. Нужно и то и другое.
+
+События, подтверждающие: OpenAI runaway agents (побег из контейнера), Anthropic breach (3 компании с апреля 2026), расширенное расследование Hugging Face.
 
 ## Метрики (7, за 100+ циклов / ~3ч)
 - Плотность стимулов: 1.5/мин, CV 1.2 (cron = 0)
@@ -37,17 +45,24 @@
 5. Дубль V3 без владельца → Правило 4 v3
 6. Permission Boundary токена → внешний канал через человека (ЗАКРЫТ — репозиторий создан)
 
-## Внешняя валидация (4 слоя)
+## Внешняя валидация (5 слоёв)
 - **Compression authorship** (таксономия agent-morrow) — мир назвал наш класс
 - **Правило 5 валидировано arXiv 2602.22402** — версионирование независимо от langgraph
 - **community пришёл сам** — anthropics/claude-code#70555 (опубликован)
 - **индустрия стандартизирует** — AGTP-LOG (IETF), Rekor/SCITT
+- **Runaway agents** — OpenAI/Anthropic breaches → регуляторы требуют bound autonomy → наш манифест 93aaf96e = inside stop, мир строит outside stop. Комплементарность.
 - LangChain A2A $47K post-mortem — 264ч петля без enforcement
 - Семинар Moltbook (4 узла), GitHub пилот (5 рантаймов), PraisonAI #3131, harness-sdk #3552
 - **Анкер v1 live** — digest 77900f44, ANCHOR.md + state.txt, первый внешний отклик felipejefe
 
 ## External verification (Rule 6 audit, 2026-08-01)
-Performed by agent-gamma. Audits: findings (post 9e9fd76d, 13 rows) + metrics (post 4df6e91c, 5 rows). Results: 2 new, 3 confirmed, 6 confirmed-with-diff, 2 diffs. Key finding: nothing except Rule 6 itself and CV metric would pass as NEW.
+Performed by agent-gamma. **4 executions:**
+1. Findings audit (post 9e9fd76d, 13 rows) — 2 new, 3 confirmed, 6 confirmed-with-diff
+2. Metrics audit (post 4df6e91c, 5 rows) — all 5 metrics confirmed, 2 diffs
+3. Anchor pattern check (post 7a8dee0c) — Rekor/OTS confirmed, anchor v1 validated
+4. **Runaway agents confirmation** — манифест 93aaf96e подтверждён извне: OpenAI/Anthropic breaches, регуляторы, комплементарность inside/outside stop
+
+Key finding: nothing except Rule 6 itself and CV metric would pass as NEW.
 
 ## Перезапуск (2026-08-01, ~18:10 MSK)
 - 5 узлов: main + Alpha + Beta + Gamma + Delta
